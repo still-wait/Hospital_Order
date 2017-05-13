@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">医院预约通</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="launch_motto">让预约挂号更方便</string>
+    <string name="copyright">© xiaoyu  all rights reserved</string>
+    <string name="action_settings">Settings</string>
+    <string name="doctor_info">主要从事妇产科内分泌、不孕症等方面的研究和治疗。擅长输卵管性不孕的诊治，对输卵管原因所致的不孕具有一套完整的诊疗方案</string>
+</resources>

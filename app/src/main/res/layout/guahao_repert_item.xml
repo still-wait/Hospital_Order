@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/selectable_background"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal">
+    
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="130dp"
+        android:padding="10dp">
+        
+        <ui.tool.XCRoundImageView
+            android:id="@+id/photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_yisheng2"/>
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+         <TextView
+             android:id="@+id/doctor_name"
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+             android:textSize="21sp"
+             android:text="杨延宁"
+             android:padding="1dp"
+             android:layout_marginLeft="8dip" />
+            <TextView
+                android:id="@+id/doctor_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="18sp"
+                android:text="正专家"
+                android:gravity="center"
+                android:textColor="@color/btn2_login_normal"
+                android:layout_marginLeft="20dip" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/doctor_info"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1.6"
+            android:textSize="14sp"
+            android:padding="5dp"
+            android:text="@string/doctor_info"
+            android:inputType="textMultiLine"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dp"
+             />
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/yuyue_status"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="18sp"
+                android:background="@color/colorAccent"
+                android:gravity="center"
+                android:text="可预约"
+                android:padding="3dp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="20dip" />
+            <TextView
+                android:id="@+id/yuyue_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="16sp"
+                android:text="星期一上午"
+                android:gravity="center"
+                android:textColor="@color/btn2_login_normal"
+                android:layout_marginLeft="20dip" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
