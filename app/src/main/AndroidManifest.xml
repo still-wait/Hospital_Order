@@ -5,7 +5,7 @@
     <application
         android:name="ui.loading.BaseApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_app"
+        android:icon="@mipmap/apppic"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -49,6 +49,14 @@
         </activity>
         <activity
             android:name="ui.main.SetOrderActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name="ui.me.GetOrderActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name="ui.me.OrderListActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>

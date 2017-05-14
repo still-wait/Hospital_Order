@@ -1,6 +1,7 @@
-package ui.main;
+package ui.me;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.hospital2.BaseActivity;
 import com.example.hospital2.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,8 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Internet.NormalPostRequest;
+import Internet.NormalPostRequest2;
+import bean.OrdinaryBean;
 import login.ResignActivity;
-import ui.me.OrderListActivity;
 
 import static Internet.volley.url;
 
@@ -35,19 +38,20 @@ import static Internet.volley.url;
  * Created by Y-GH on 2017/5/12.
  */
 
-public class SetOrderActivity extends BaseActivity  {
+public class GetOrderActivity extends BaseActivity  {
     private EditText userid,idcard;
-    private TextView keshi,category,repert_info,time,sort,price;
-    private Button commit;
+    private TextView keshi,category,repert_info,time,sort,price,orderid;
+    private Button pay,cancel;
     private static ProgressDialog dialog;
     private SharedPreferences pref;
-    private static final String MSG_LOGIN_SUCCESS = "提交成功";
-    private String httpurl1 = url+":8080/xiaoyu/setorder";
+    private static final String MSG_LOGIN_SUCCESS = "支付成功";
+    private String httpurl1 = url+":8080/xiaoyu/orderpay";
+    private String payStatus;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.setorder);
+        setContentView(R.layout.getorder);
         initView();
         initData();
     }
@@ -55,57 +59,51 @@ public class SetOrderActivity extends BaseActivity  {
     private void initData() {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+        pref = getSharedPreferences("user", MODE_PRIVATE);
+        orderid.setText(bundle.getString("orderid"));
+        userid.setText(pref.getString("username",null));
+        idcard.setText(bundle.getString("idcard"));
+        price.setText(bundle.getString("price"));
+        repert_info.setText(bundle.getString("repert"));
         keshi.setText(bundle.getString("keshi"));
         category.setText(bundle.getString("category"));
         time.setText(bundle.getString("time"));
         sort.setText(bundle.getString("sort"));
-        repert_info.setText(bundle.getString("repert"));
-        if(bundle.getString("category").equals("普通号")){
-            price.setText("5元");
-        }else {
-            price.setText("15元");
+        payStatus = bundle.getString("paystatus");
+        if(payStatus.equals("1")){
+            pay.setEnabled(false);
+            pay.setText("已支付");
         }
-
-
-        pref = getSharedPreferences("user", MODE_PRIVATE);
-        userid.setText(pref.getString("username",null));
-        idcard.setText(pref.getString("idcard",null));
     }
 
     private void initView() {
-        getSupportActionBar().setTitle("提交订单");
+        getSupportActionBar().setTitle("订单详情");
         userid = (EditText) findViewById(R.id.msg_username);
         idcard = (EditText) findViewById(R.id.msg_idcard);
+        orderid = (TextView) findViewById(R.id.orderid);
         keshi = (TextView) findViewById(R.id.keshi);
         category = (TextView) findViewById(R.id.category);
         repert_info = (TextView) findViewById(R.id.repert_info);
         time = (TextView) findViewById(R.id.time);
         sort = (TextView) findViewById(R.id.sort);
         price = (TextView) findViewById(R.id.price);
-        commit = (Button) findViewById(R.id.btn_order);
+        pay = (Button) findViewById(R.id.btn_pay);
+        cancel = (Button) findViewById(R.id.btn_canel);
 
-        commit.setOnClickListener(new View.OnClickListener() {
+        pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String userId = pref.getString("userid",null);
-                final String Category = category.getText().toString();
-                final String Time = time.getText().toString();
-                final String Idcard = idcard.getText().toString();
-                final String Price = price.getText().toString();
-                final String Sort = sort.getText().toString();
-                final String repert = repert_info.getText().toString();
-                final String Keshi = keshi.getText().toString();
                 /**
                  * loading...
                  */
 
                 if (dialog == null) {
-                    dialog = new ProgressDialog(SetOrderActivity.this);
+                    dialog = new ProgressDialog(GetOrderActivity.this);
                 }
-                dialog.setMessage("提交中...");
+                dialog.setMessage("支付中...");
                 dialog.setCancelable(false);
                 dialog.show();
-                onSetOrder(userId,Category,Time,Idcard,Price,Sort,repert,Keshi);
+                onSetOrder(GetOrderActivity.this);
             }
         });
 
@@ -113,17 +111,15 @@ public class SetOrderActivity extends BaseActivity  {
     }
 
 
-    private void onSetOrder(final String userid, String category, String time, String idcard, String price, String sort, String repert,String Keshi) {
+    /**
+     * 支付
+     * @param context
+     */
+    private void onSetOrder(final Context context) {
         Map<String, String> params = new HashMap<String, String>();
-        params.put("userid", userid);
-        params.put("category", category);
-        params.put("time", time);
-        params.put("idcard", idcard);
-        params.put("price", price);
-        params.put("sort", (Integer.parseInt(sort)-1)+"");
-        params.put("repert", repert);
-        params.put("keshi", Keshi);
-        params.put("paystatus", "0");
+
+        params.put("orderid", orderid.getText().toString());
+        params.put("paystatus","1");
         /**
          * 访问网络
          */
@@ -134,7 +130,7 @@ public class SetOrderActivity extends BaseActivity  {
                     @Override
                     public void onResponse(JSONObject response) {
 //                        String json = new Gson().toJson(response);
-                        Log.e("注册成功", response.toString() );
+                        Log.e("成功", response.toString() );
                         try {
                             Log.e("====>>>>>",response.getString("status"));
                             if (response.getString("status").equals("success")) {
@@ -150,7 +146,7 @@ public class SetOrderActivity extends BaseActivity  {
                                     dialog.cancel();
                                     dialog = null;
                                 }
-                                Toast.makeText(SetOrderActivity.this,"内部错误", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context,"内部错误", Toast.LENGTH_SHORT).show();
 //                            Toast.makeText(Old_LoginActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
@@ -164,7 +160,7 @@ public class SetOrderActivity extends BaseActivity  {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
 //                JUtils.ToastLong(getResources().getString(R.string.other_server_error));
-                Toast.makeText(SetOrderActivity.this, "连接服务器错误", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "连接服务器错误", Toast.LENGTH_SHORT).show();
 
                 if (dialog != null) {
                     dialog.cancel();
@@ -178,9 +174,8 @@ public class SetOrderActivity extends BaseActivity  {
     private void showTip(String str) {
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
         if (str == MSG_LOGIN_SUCCESS) {
-            Intent intent = new Intent(SetOrderActivity.this, OrderListActivity.class);
-            startActivity(intent);
-            finish();
+            pay.setEnabled(false);
+            pay.setText("已支付");
         }
 
     }

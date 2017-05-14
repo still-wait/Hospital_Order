@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="@dimen/item_height"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/bg_item_center"
         android:focusable="true"
         android:focusableInTouchMode="true"
@@ -69,14 +69,6 @@
             android:textColor="@color/dimgray"
             android:textSize="15sp" />
 
-        <ImageView
-            android:id="@+id/img_msg_cellphone1"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_toRightOf="@+id/msg_cellphone1"
-            android:src="@mipmap/login_delete_data_icon"
-            android:visibility="invisible" />
     </LinearLayout>
     <TextView
         android:layout_width="wrap_content"
@@ -86,6 +78,38 @@
         android:text="订单详情："
         android:textColor="#1E88E5"
         android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:background="@drawable/bg_item_center"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:ellipsize="end"
+            android:paddingRight="16dp"
+            android:text="  订单号  "
+            android:textColor="@color/text"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/orderid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_marginLeft="50dp"
+            android:text="请输入"
+            android:inputType="text"
+            android:textColor="@color/dimgray"
+            android:textSize="15sp" />
+
+    </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="35dp"
@@ -278,9 +302,9 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_order"
+        android:id="@+id/btn_pay"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
+        android:layout_height="35dp"
         android:layout_margin="@dimen/item_margin_large"
         android:background="@drawable/btn_ok2"
         android:text="去支付"
@@ -289,8 +313,9 @@
     <Button
         android:id="@+id/btn_canel"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:layout_margin="@dimen/item_margin_large"
+        android:layout_height="35dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
         android:background="@drawable/btn_ok2"
         android:text="取消订单"
         android:textColor="@drawable/btn_login_text" />

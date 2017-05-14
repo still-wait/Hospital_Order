@@ -45,11 +45,13 @@
                 android:id="@+id/doctor_flag"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="正专家"
                 android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textColor="@color/btn2_login_normal"
-                android:layout_marginLeft="20dip" />
+                android:layout_marginLeft="15dip" />
         </LinearLayout>
         <TextView
             android:id="@+id/doctor_info"

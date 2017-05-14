@@ -34,4 +34,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.jude:easyrecyclerview:3.2.3'
     compile 'com.github.orangegangsters:swipy:1.2.3'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
 }

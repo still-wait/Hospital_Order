@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="@drawable/selectable_background"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:layout_marginTop="13dp"
+                android:text="订单号:"
+                android:textSize="17sp" />
+            <TextView
+                android:id="@+id/orderid"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:layout_marginTop="15dp"
+                android:text="20170512763127683"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/ordertime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="1.6"
+            android:ellipsize="end"
+            android:inputType="textMultiLine"
+            android:maxLines="2"
+            android:text="暂无信息"
+            android:textSize="14sp" />
+
+</LinearLayout>

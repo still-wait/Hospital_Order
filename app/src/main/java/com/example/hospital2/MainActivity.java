@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -21,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -41,6 +44,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import Internet.NormalPostRequest2;
 import bean.KeshiBean;
@@ -50,9 +56,11 @@ import ui.loading.Loading;
 import ui.main.DiscriptionDialog;
 import ui.main.Keshi_select;
 import ui.main.Keshi_select_repert;
+import ui.main.SetOrderActivity;
 import ui.main.gh_repert;
 import ui.me.LogoutDialogFragment;
 import Internet.volley;
+import ui.me.OrderListActivity;
 
 import static Internet.volley.url;
 
@@ -64,6 +72,23 @@ public class MainActivity extends AppCompatActivity
     private SwipyRefreshLayout swipyRefreshLayout;
     private static ProgressDialog dialog;
     private static String httpurl1 = url+":8080/xiaoyu/keshifirst";
+    private ViewPager mViewPaper;
+    private List<ImageView> images;
+    private int currentItem;
+    //记录上一次点的位置
+    private int oldPosition = 0;
+    private List<View> dots;
+    //存放图片的id
+    private int[] imageIds = new int[]{
+            R.drawable.a,
+            R.drawable.b,
+            R.drawable.c,
+            R.drawable.d,
+            R.drawable.e
+    };
+    private ViewPagerAdapter tupianadapter;
+    private ScheduledExecutorService scheduledExecutorService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +122,25 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+        /**
+         *轮播
+         */
+        mViewPaper = (ViewPager) findViewById(R.id.vp);
+        //显示的图片
+        images = new ArrayList<ImageView>();
+        for(int i = 0; i < imageIds.length; i++){
+            ImageView imageView = new ImageView(this);
+            imageView.setBackgroundResource(imageIds[i]);
+            images.add(imageView);
+        }
+        //显示的小点
+        dots = new ArrayList<View>();
+        dots.add(findViewById(R.id.dot_0));
+        dots.add(findViewById(R.id.dot_1));
+        dots.add(findViewById(R.id.dot_2));
+        dots.add(findViewById(R.id.dot_3));
+        dots.add(findViewById(R.id.dot_4));
+        initPager();
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -109,6 +153,34 @@ public class MainActivity extends AppCompatActivity
         });
 
         initData();
+    }
+
+    private void initPager() {
+        tupianadapter = new ViewPagerAdapter();
+        mViewPaper.setAdapter(tupianadapter);
+
+        mViewPaper.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+
+            @Override
+            public void onPageSelected(int position) {
+                dots.get(position).setBackgroundResource(R.drawable.dot_focused);
+                dots.get(oldPosition).setBackgroundResource(R.drawable.dot_normal);
+
+                oldPosition = position;
+                currentItem = position;
+            }
+
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+
+            }
+        });
     }
 
     private void initData() {
@@ -143,6 +215,12 @@ public class MainActivity extends AppCompatActivity
                 case 2:
                     listview.setAdapter(Adapter);
                     swipyRefreshLayout.setRefreshing(false);
+                    break;
+                case 3:
+                    /**
+                     * 接收子线程传递过来的数据
+                     */
+                    mViewPaper.setCurrentItem(currentItem);
                     break;
             }
         };
@@ -235,15 +313,12 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_team) {
+        if (id == R.id.nav_guahao) {
+            Intent intent = new Intent(MainActivity.this, OrderListActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_sort) {
 
         } else if (id == R.id.nav_mymessage) {
-
-        } else if (id == R.id.nav_chat) {
 
         } else if (id == R.id.nav_about) {
 
@@ -312,6 +387,80 @@ public class MainActivity extends AppCompatActivity
             }
         }, params);
         requestQueue.add(request);
+    }
+
+    /**
+     * 轮播效果实现
+     */
+    private class ViewPagerAdapter extends PagerAdapter {
+
+        @Override
+        public int getCount() {
+            return images.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == arg1;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup view, int position, Object object) {
+            // TODO Auto-generated method stub
+//          super.destroyItem(container, position, object);
+//          view.removeView(view.getChildAt(position));
+//          view.removeViewAt(position);
+            view.removeView(images.get(position));
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup view, int position) {
+            // TODO Auto-generated method stub
+            view.addView(images.get(position));
+            return images.get(position);
+        }
+
+    }
+
+    /**
+     * 利用线程池定时执行动画轮播
+     */
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleWithFixedDelay(
+                new ViewPageTask(),
+                2,
+                2,
+                TimeUnit.SECONDS);
+    }
+
+
+    /**
+     * 图片轮播任务
+     * @author liuyazhuang
+     *
+     */
+    private class ViewPageTask implements Runnable{
+
+        @Override
+        public void run() {
+            currentItem = (currentItem + 1) % imageIds.length;
+            mHandler.sendEmptyMessage(3);
+        }
+    }
+
+
+    @Override
+    protected void onStop() {
+        // TODO Auto-generated method stub
+        super.onStop();
+        if(scheduledExecutorService != null){
+            scheduledExecutorService.shutdown();
+            scheduledExecutorService = null;
+        }
     }
 
 }

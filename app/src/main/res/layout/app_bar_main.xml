@@ -20,8 +20,31 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
-
     <include layout="@layout/content_main" />
+
+    <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
+        android:id="@+id/swipyrefreshlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="240dp"
+        app:srl_direction="top">
+
+
+        <ListView
+            android:id="@+id/main_keshi_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10dp"
+            android:padding="10dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:layout_weight="1" >
+        </ListView>
+
+    </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
+
+
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/fab_menu"
